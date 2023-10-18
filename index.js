@@ -22,6 +22,50 @@ async function run() {
   try {
     await client.connect();
 
+    const productCollection = client.db("productDB").collection("product");
+    const categoryCollection = client.db("productDB").collection("category");
+
+    app.post("/product", async (req, res) => {
+      const newProduct = req.body;
+      const result = await productCollection.insertOne(newProduct);
+      res.send(result);
+    });
+
+    app.get("/category", async (req, res) => {
+      const cursor = categoryCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // const categories = [
+    //   {
+    //     brandName: "Nike",
+    //     brandImage: "https://i.ibb.co/XyTTGRR/category1.jpg",
+    //   },
+    //   {
+    //     brandName: "Adidas",
+    //     brandImage: "https://i.ibb.co/BjQDWyd/category2.png",
+    //   },
+    //   {
+    //     brandName: "Puma",
+    //     brandImage: "https://i.ibb.co/rm6B9ZD/category3.jpg",
+    //   },
+    //   {
+    //     brandName: "New Balance",
+    //     brandImage: "https://i.ibb.co/FqZPdWK/category4.png",
+    //   },
+    //   {
+    //     brandName: "Reebok",
+    //     brandImage: "https://i.ibb.co/wQJmqQw/category5.png",
+    //   },
+    //   {
+    //     brandName: "Versace",
+    //     brandImage: "https://i.ibb.co/fFzyYTw/category6.png",
+    //   },
+    // ];
+
+    // await categoryCollection.insertMany(categories);
+
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
