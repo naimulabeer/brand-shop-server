@@ -24,6 +24,7 @@ async function run() {
 
     const productCollection = client.db("productDB").collection("product");
     const categoryCollection = client.db("productDB").collection("category");
+    const cartCollection = client.db("productDB").collection("cart");
 
     app.get("/product", async (req, res) => {
       const cursor = productCollection.find();
@@ -83,34 +84,18 @@ async function run() {
       res.send(result);
     });
 
-    // const categories = [
-    //   {
-    //     brandName: "Nike",
-    //     brandImage: "https://i.ibb.co/XyTTGRR/category1.jpg",
-    //   },
-    //   {
-    //     brandName: "Adidas",
-    //     brandImage: "https://i.ibb.co/BjQDWyd/category2.png",
-    //   },
-    //   {
-    //     brandName: "Puma",
-    //     brandImage: "https://i.ibb.co/rm6B9ZD/category3.jpg",
-    //   },
-    //   {
-    //     brandName: "New Balance",
-    //     brandImage: "https://i.ibb.co/FqZPdWK/category4.png",
-    //   },
-    //   {
-    //     brandName: "Reebok",
-    //     brandImage: "https://i.ibb.co/wQJmqQw/category5.png",
-    //   },
-    //   {
-    //     brandName: "Versace",
-    //     brandImage: "https://i.ibb.co/fFzyYTw/category6.png",
-    //   },
-    // ];
+    app.get("/cart", async (req, res) => {
+      const cursor = cartCollection.find();
+      const carts = await cursor.toArray();
+      res.send(carts);
+    });
 
-    // await categoryCollection.insertMany(categories);
+    app.post("/cart", async (req, res) => {
+      const cart = req.body;
+      console.log(cart);
+      const result = await cartCollection.insertOne(cart);
+      res.send(result);
+    });
 
     await client.db("admin").command({ ping: 1 });
     console.log(
